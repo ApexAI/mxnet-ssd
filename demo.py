@@ -120,5 +120,10 @@ if __name__ == '__main__':
                             (args.mean_r, args.mean_g, args.mean_b),
                             ctx, len(class_names), args.nms_thresh, args.force_nms)
     # run detection
-    detector.detect_and_visualize(image_list, args.dir, args.extension,
+    #detector.detect_and_visualize(image_list, args.dir, args.extension,
+    #                              class_names, args.thresh, args.show_timer)
+    with open('demo_filenames') as f:
+        ims = f.read().splitlines()
+
+    detector.visualize_stream(ims, args.dir, args.extension,
                                   class_names, args.thresh, args.show_timer)

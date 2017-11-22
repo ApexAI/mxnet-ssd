@@ -174,3 +174,52 @@ class Detector(object):
             img = cv2.imread(im_list[k])
             img[:, :, (0, 1, 2)] = img[:, :, (2, 1, 0)]
             self.visualize_detection(img, det, classes, thresh)
+
+    def visualize_stream(self, im_list, root_dir=None, extension=None,
+                             classes=[], thresh=0.6, show_timer=False):
+
+
+        import cv2
+        import matplotlib.pyplot as plt
+        import random
+
+        for idx, im in enumerate(im_list):
+            dets=self.im_detect([im], root_dir, extension, show_timer=show_timer)
+            for k, det in enumerate(dets):
+                img = cv2.imread(im)
+                img[:, :, (0, 1, 2)] = img[:, :, (2, 1, 0)]
+                #self.visualize_detection(img, det, classes, thresh)
+                plt.gca().patches=[]
+                plt.gca().texts=[]
+
+                plt.imshow(img)
+                height = img.shape[0]
+                width = img.shape[1]
+                colors = dict()
+                for i in range(det.shape[0]):
+                    cls_id = int(det[i, 0])
+                    if cls_id >= 0:
+                        score = det[i, 1]
+                        if score > thresh:
+                            if cls_id not in colors:
+                                colors[cls_id] = (random.random(), random.random(), random.random())
+                            xmin = int(det[i, 2] * width)
+                            ymin = int(det[i, 3] * height)
+                            xmax = int(det[i, 4] * width)
+                            ymax = int(det[i, 5] * height)
+                            rect = plt.Rectangle((xmin, ymin), xmax - xmin,
+                                                 ymax - ymin, fill=False,
+                                                 edgecolor=colors[cls_id],
+                                                 linewidth=3.5)
+                            plt.gca().add_patch(rect)
+                            class_name = str(cls_id)
+                            if classes and len(classes) > cls_id:
+                                class_name = classes[cls_id]
+                            plt.gca().text(xmin, ymin - 2,
+                                           '{:s} {:.3f}'.format(class_name, score),
+                                           bbox=dict(facecolor=colors[cls_id], alpha=0.5),
+                                           fontsize=12, color='white')
+                plt.draw()
+
+                plt.pause(0.000000001)
+

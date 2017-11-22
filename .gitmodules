@@ -1,3 +1,7 @@
 [submodule "mxnet"]
 	path = mxnet
 	url = https://github.com/zhreshold/mxnet.git
+
+[submodule "BMXNet"]
+	path = BMXNet
+	url = https://github.com/hpi-xnor/BMXNet.git
