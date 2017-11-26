@@ -65,7 +65,7 @@ def load_coco(image_set, dirname, shuffle=False):
     imdbs = []
     for af in anno_files:
         af_path = os.path.join(dirname, 'annotations', af)
-        imdbs.append(Coco(af_path, dirname, shuffle=shuffle))
+        imdbs.append(Coco(af_path, dirname, image_set, shuffle=shuffle))
     if len(imdbs) > 1:
         return ConcatDB(imdbs, shuffle)
     else:

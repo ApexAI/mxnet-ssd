@@ -39,7 +39,7 @@ def parse_args():
                         default=20, type=int)
     parser.add_argument('--data-shape', dest='data_shape', type=int, default=300,
                         help='set image shape')
-    parser.add_argument('--label-width', dest='label_width', type=int, default=350,
+    parser.add_argument('--label-width', dest='label_width', type=int, default=-1,
                         help='force padding label width to sync across train and validation')
     parser.add_argument('--lr', dest='learning_rate', type=float, default=0.004,
                         help='learning rate')

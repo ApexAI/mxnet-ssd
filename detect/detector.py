@@ -40,7 +40,7 @@ class Detector(object):
         self.mod.set_params(args, auxs)
         self.data_shape = data_shape
         self.mean_pixels = mean_pixels
-
+        self.sum=0.0
     def detect(self, det_iter, show_timer=False):
         """
         detect all images in iterator
@@ -68,6 +68,8 @@ class Detector(object):
         if show_timer:
             print("Detection time for {} images: {:.4f} sec".format(
                 num_images, time_elapsed))
+            self.sum+=time_elapsed
+
         for output in detections:
             for i in range(output.shape[0]):
                 det = output[i, :, :]
@@ -222,4 +224,9 @@ class Detector(object):
                 plt.draw()
 
                 plt.pause(0.000000001)
+        print("time elapsed total:")
+        print(self.sum)
+        print("average time: %f")
+        a=self.sum/171
+        print(a)
 
