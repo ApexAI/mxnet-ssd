@@ -91,6 +91,7 @@ class Coco(Imdb):
         apex_categories=cars+pedestrians+cyclists+lights+signs
         cnt=0
         humanonly=0
+        human_count=0
 
         for img_id in img_ids:
             relevant=False
@@ -108,7 +109,7 @@ class Coco(Imdb):
 
             #print("listing categories for filename: "+filename)
 
-
+            hashumans=False
             for anno in annos:
                 cat_id = int(anno["category_id"])
                 if(cat_id in apex_categories):
@@ -121,17 +122,23 @@ class Coco(Imdb):
                     ymax = ymin + float(bbox[3]) / height
                     label.append([cat_reduced, xmin, ymin, xmax, ymax, 0])
                     #print("category: %d"%cat_reduced)
-                    #if(cat_id not in pedestrians):   #at least one non-person object is necessary
-                    #    relevant=True
-                    #else:
-                    #    humanonly+=1
-            if label:
+                    if (cat_id in pedestrians):
+                        hashumans=True
+                    if(cat_id not in pedestrians):   #at least one non-person object is necessary
+                        relevant=True
+
+            if(label and not relevant):
+                humanonly+=1
+            if label and relevant:
+                if(hashumans):
+                    human_count+=1
                 #print("adding "+filename)
                 labels.append(np.array(label))
                 image_set_index.append(os.path.join(self.set, filename))
                 cnt+=1
         print("added %d images"%cnt)
-        #print("%d images has only humans"%humanonly)
+        print("%d images has only humans"%humanonly)
+        print("%d registered images has humans"%human_count)
 
         if shuffle:
             import random
