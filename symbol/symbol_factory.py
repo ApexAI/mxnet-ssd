@@ -94,6 +94,20 @@ def get_config(network, data_shape, **kwargs):
         normalizations = -1
         steps = []
         return locals()
+    elif network == 'dilated_resnet18':
+        num_layers = 18
+        image_shape = '3,224,224'  # resnet require it as shape check
+        network = 'dilated_resnet18'
+        from_layers = ['_plus2', '_plus4', '', '', '', '']
+        num_filters = [-1, -1, 512, 256, 256, 256]
+        strides = [-1, -1, 2, 2, 2, 2]
+        pads = [-1, -1, 1, 1, 1, 1]
+        sizes = [[.1, .141], [.2,.272], [.37, .447], [.54, .619], [.71, .79], [.88, .961]]
+        ratios = [[1,2,.5], [1,2,.5,3,1./3], [1,2,.5,3,1./3], [1,2,.5,3,1./3], \
+            [1,2,.5], [1,2,.5]]
+        normalizations = -1
+        steps = []
+        return locals()
     elif network == 'resnet50':
         num_layers = 50
         image_shape = '3,224,224'  # resnet require it as shape check
@@ -123,7 +137,19 @@ def get_config(network, data_shape, **kwargs):
         steps = []
         return locals()
     elif network == 'mobilenet':
-        from_layers = ['conv_12_relu', 'conv_14_relu', '', '', '', '', '']
+        from_layers = ['relu5_6_sep', 'relu6_sep', '', '', '', '', '']
+        num_filters = [-1, -1, 512, 256, 256, 256, 256]
+        strides = [-1, -1, 2, 2, 2, 2, 2]
+        pads = [-1, -1, 1, 1, 1, 1, 1]
+        sizes = [[.07, .1025], [.15,.2121], [.3, .3674], [.45, .5196], [.6, .6708], \
+            [.75, .8216], [.9, .9721]]
+        ratios = [[1,2,.5], [1,2,.5,3,1./3], [1,2,.5,3,1./3], [1,2,.5,3,1./3], \
+            [1,2,.5,3,1./3], [1,2,.5], [1,2,.5]]
+        normalizations = -1
+        steps = []
+        return locals()
+    elif network == 'squeezenet_v1.1':
+        from_layers = ['fire8_concat', 'relu_conv10', '', '', '', '', '']
         num_filters = [-1, -1, 512, 256, 256, 256, 256]
         strides = [-1, -1, 2, 2, 2, 2, 2]
         pads = [-1, -1, 1, 1, 1, 1, 1]
