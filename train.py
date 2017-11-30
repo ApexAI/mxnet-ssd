@@ -23,6 +23,7 @@ def parse_args():
                         help='resume training from epoch n')
     parser.add_argument('--finetune', dest='finetune', type=int, default=-1,
                         help='finetune from epoch n, rename the model before doing this')
+
     parser.add_argument('--pretrained', dest='pretrained', help='pretrained model prefix',
                         default=os.path.join(os.getcwd(), 'model', 'vgg16_reduced'), type=str)
     parser.add_argument('--epoch', dest='epoch', help='epoch of pretrained model',
@@ -65,14 +66,12 @@ def parse_args():
                         help='log network parameters every N iters if larger than 0')
     parser.add_argument('--pattern', dest='monitor_pattern', type=str, default=".*",
                         help='monitor parameter pattern, as regex')
-    parser.add_argument('--num-class', dest='num_class', type=int, default=20,
+    parser.add_argument('--num-class', dest='num_class', type=int, default=5,
                         help='number of classes')
     parser.add_argument('--num-example', dest='num_example', type=int, default=16551,
                         help='number of image examples')
     parser.add_argument('--class-names', dest='class_names', type=str,
-                        default='aeroplane, bicycle, bird, boat, bottle, bus, \
-                        car, cat, chair, cow, diningtable, dog, horse, motorbike, \
-                        person, pottedplant, sheep, sofa, train, tvmonitor',
+                        default='dataset/names/apex_coco.names',
                         help='string of comma separated names, or text filename')
     parser.add_argument('--nms', dest='nms_thresh', type=float, default=0.45,
                         help='non-maximum suppression threshold')
