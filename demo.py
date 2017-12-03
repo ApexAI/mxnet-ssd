@@ -80,6 +80,8 @@ def parse_args():
                         car, cat, chair, cow, diningtable, dog, horse, motorbike, \
                         person, pottedplant, sheep, sofa, train, tvmonitor',
                         help='string of comma separated names, or text filename')
+    parser.add_argument('--benchmark', dest='benchmark', action='store_true', default=False,
+                        help='benchmark')
     args = parser.parse_args()
     return args
 
@@ -126,4 +128,4 @@ if __name__ == '__main__':
         ims = f.read().splitlines()
 
     detector.visualize_stream(ims, args.dir, args.extension,
-                                  class_names, args.thresh, args.show_timer)
+                                  class_names, args.thresh, args.show_timer, args.benchmark)

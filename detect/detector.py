@@ -37,6 +37,7 @@ class Detector(object):
         self.mod = mx.mod.Module(symbol, label_names=None, context=ctx)
         self.data_shape = data_shape
         self.mod.bind(data_shapes=[('data', (batch_size, 3, data_shape, data_shape))])
+        print([('data', (batch_size, 3, data_shape, data_shape))])
         self.mod.set_params(args, auxs)
         self.data_shape = data_shape
         self.mean_pixels = mean_pixels
@@ -59,10 +60,41 @@ class Detector(object):
         num_images = det_iter._size
         result = []
         detections = []
+        print("data shape: {}".format(self.data_shape))
+        print("detiter shape: {}".format(det_iter.provide_data))
         if not isinstance(det_iter, mx.io.PrefetchingIter):
             det_iter = mx.io.PrefetchingIter(det_iter)
         start = timer()
         for pred, _, _ in self.mod.iter_predict(det_iter):
+            detections.append(pred[0].asnumpy())
+        time_elapsed = timer() - start
+        if show_timer:
+            print("Detection time for {} images: {:.4f} sec".format(
+                num_images, time_elapsed))
+            self.sum+=time_elapsed
+
+        for output in detections:
+            for i in range(output.shape[0]):
+                det = output[i, :, :]
+                res = det[np.where(det[:, 0] >= 0)[0]]
+                result.append(res)
+        return result
+
+    def binary_detect(self, det_iter, show_timer=False):
+        print("loading binaru symbol......")
+        load_symbol, args, auxs = mx.model.load_checkpoint("model/binarized_resnet18_quantized", 2)
+        model = mx.mod.Module(load_symbol, label_names=None, context=self.ctx)
+        model.bind(data_shapes=det_iter.provide_data,label_shapes=det_iter.provide_label)
+        model.set_params(args, auxs)
+
+
+        num_images = det_iter._size
+        result = []
+        detections = []
+        if not isinstance(det_iter, mx.io.PrefetchingIter):
+            det_iter = mx.io.PrefetchingIter(det_iter)
+        start = timer()
+        for pred, _, _ in model.iter_predict(det_iter):
             detections.append(pred[0].asnumpy())
         time_elapsed = timer() - start
         if show_timer:
@@ -178,7 +210,7 @@ class Detector(object):
             self.visualize_detection(img, det, classes, thresh)
 
     def visualize_stream(self, im_list, root_dir=None, extension=None,
-                             classes=[], thresh=0.6, show_timer=False):
+                             classes=[], thresh=0.6, show_timer=False, benchmark=False):
 
 
         import cv2
@@ -221,12 +253,11 @@ class Detector(object):
                                            '{:s} {:.3f}'.format(class_name, score),
                                            bbox=dict(facecolor=colors[cls_id], alpha=0.5),
                                            fontsize=12, color='white')
-                plt.draw()
+                if not benchmark:
+                    plt.draw()
 
                 plt.pause(0.000000001)
-        print("time elapsed total:")
-        print(self.sum)
-        print("average time: %f")
-        a=self.sum/171
-        print(a)
+        print("time elapsed total:"%self.sum)
+        print("average time: %f"% (self.sum/171))
+
 
