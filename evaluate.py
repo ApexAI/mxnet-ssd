@@ -15,12 +15,10 @@ def parse_args():
                         help='which network to use')
     parser.add_argument('--batch-size', dest='batch_size', type=int, default=32,
                         help='evaluation batch size')
-    parser.add_argument('--num-class', dest='num_class', type=int, default=20,
+    parser.add_argument('--num-class', dest='num_class', type=int, default=5,
                         help='number of classes')
     parser.add_argument('--class-names', dest='class_names', type=str,
-                        default='aeroplane, bicycle, bird, boat, bottle, bus, \
-                        car, cat, chair, cow, diningtable, dog, horse, motorbike, \
-                        person, pottedplant, sheep, sofa, train, tvmonitor',
+                        default='dataset/names/apex_coco.names',
                         help='string of comma separated names, or text filename')
     parser.add_argument('--epoch', dest='epoch', help='epoch of pretrained model',
                         default=0, type=int)

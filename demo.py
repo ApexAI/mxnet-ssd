@@ -76,9 +76,7 @@ def parse_args():
     parser.add_argument('--deploy', dest='deploy_net', action='store_true', default=False,
                         help='Load network from json file, rather than from symbol')
     parser.add_argument('--class-names', dest='class_names', type=str,
-                        default='aeroplane, bicycle, bird, boat, bottle, bus, \
-                        car, cat, chair, cow, diningtable, dog, horse, motorbike, \
-                        person, pottedplant, sheep, sofa, train, tvmonitor',
+                        default='dataset/names/apex_coco.names',
                         help='string of comma separated names, or text filename')
     parser.add_argument('--benchmark', dest='benchmark', action='store_true', default=False,
                         help='benchmark')
