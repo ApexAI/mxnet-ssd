@@ -56,7 +56,7 @@ def get_config(network, data_shape, **kwargs):
         num_layers = 18
         image_shape = '3,224,224'  # resnet require it as shape check
         network = 'resnet'
-        from_layers = ['_plus2', '_plus4', '', '', '', '']
+        from_layers = ['_plus5', '_plus7', '', '', '', '']
         num_filters = [-1, -1, 512, 256, 256, 256]
         strides = [-1, -1, 2, 2, 2, 2]
         pads = [-1, -1, 1, 1, 1, 1]
@@ -70,7 +70,7 @@ def get_config(network, data_shape, **kwargs):
         num_layers = 18
         image_shape = '3,224,224'  # resnet require it as shape check
         network = 'binary_resnet'
-        from_layers = ['_plus2', '_plus4', '', '', '', '']
+        from_layers = ['_plus5', '_plus7', '', '', '', '']
         num_filters = [-1, -1, 512, 256, 256, 256]
         strides = [-1, -1, 2, 2, 2, 2]
         pads = [-1, -1, 1, 1, 1, 1]
@@ -84,7 +84,7 @@ def get_config(network, data_shape, **kwargs):
         num_layers = 18
         image_shape = '3,224,224'  # resnet require it as shape check
         network = 'separable_resnet'
-        from_layers = ['_plus2', '_plus4', '', '', '', '']
+        from_layers = ['_plus5', '_plus7', '', '', '', '']
         num_filters = [-1, -1, 512, 256, 256, 256]
         strides = [-1, -1, 2, 2, 2, 2]
         pads = [-1, -1, 1, 1, 1, 1]
@@ -98,7 +98,7 @@ def get_config(network, data_shape, **kwargs):
         num_layers = 18
         image_shape = '3,224,224'  # resnet require it as shape check
         network = 'dilated_resnet18'
-        from_layers = ['_plus2', '_plus4', '', '', '', '']
+        from_layers = ['_plus5', '_plus7', '', '', '', '']
         num_filters = [-1, -1, 512, 256, 256, 256]
         strides = [-1, -1, 2, 2, 2, 2]
         pads = [-1, -1, 1, 1, 1, 1]

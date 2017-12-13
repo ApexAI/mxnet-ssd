@@ -7,6 +7,7 @@ sys.path.append(os.path.join(curr_path, '..'))
 from dataset.pascal_voc import PascalVoc
 from dataset.mscoco import Coco
 from dataset.concat_db import ConcatDB
+from dataset.bosch import Bosch
 
 def load_pascal(image_set, year, devkit_path, shuffle=False):
     """
@@ -71,6 +72,13 @@ def load_coco(image_set, dirname, shuffle=False):
     else:
         return imdbs[0]
 
+def load_bosch(image_set, dirname, shuffle=False):
+    imdbs = []
+    af_path=os.path.join(dirname, 'train.yaml')
+    imdbs.append(Bosch(af_path, dirname, image_set, shuffle=shuffle))
+    return imdbs[0]
+
+
 def parse_args():
     parser = argparse.ArgumentParser(description='Prepare lists for dataset')
     parser.add_argument('--dataset', dest='dataset', help='dataset to use',
@@ -98,6 +106,10 @@ if __name__ == '__main__':
         db.save_imglist(args.target, root=args.root_path)
     elif args.dataset == 'coco':
         db = load_coco(args.set, args.root_path, args.shuffle)
+        print("saving list to disk...")
+        db.save_imglist(args.target, root=args.root_path)
+    elif args.dataset == "bosch":
+        db = load_bosch(args.set, args.root_path, args.shuffle)
         print("saving list to disk...")
         db.save_imglist(args.target, root=args.root_path)
     else:
