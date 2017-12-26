@@ -13,9 +13,9 @@ parser.add_argument('--prefix', dest='prefix', help='train list to use',
                     default="resnet_nexar", type=str)
 
 parser.add_argument('--train_rec', dest='train_rec', help='train file to use',
-                    default="../data/nexar/nexar_train.rec", type=str)
+                    default="../data/nexar/nexar_train_noisy.rec", type=str)
 parser.add_argument('--val_rec', dest='val_rec', help='val file to use',
-                    default="../data/nexar/nexar_val.rec", type=str)
+                    default="../data/nexar/nexar_val_noisy.rec", type=str)
 
 def get_lr_scheduler(learning_rate, lr_refactor_step, lr_refactor_ratio,
                      num_example, batch_size, begin_epoch):
@@ -39,14 +39,14 @@ def get_lr_scheduler(learning_rate, lr_refactor_step, lr_refactor_ratio,
 
 if __name__ == '__main__':
     # download data
-    sym = resnet.get_symbol(3,18,"3,32,32")
+    sym = resnet.get_symbol(4,18,"3,32,32")
     pargs = parser.parse_args()
 
     logging.getLogger().setLevel(logging.DEBUG)
 
     train_iter = mx.io.ImageRecordIter(
       path_imgrec=pargs.train_rec, data_name="data", label_name="softmax_label",
-      batch_size=128, data_shape=(3,32,32), shuffle=True)
+      batch_size=128, data_shape=(3,32,32), shuffle=True, rand_crop=True, rand_mirror=True)
 
     valid_iter = mx.io.ImageRecordIter(
       path_imgrec=pargs.val_rec, data_name="data", label_name="softmax_label",
