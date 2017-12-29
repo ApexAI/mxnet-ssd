@@ -4,18 +4,25 @@ import logging
 import sys
 sys.path.append("../symbol")
 import resnet
+import mobilenet_2
+
 import mxnet as mx
 
 parser = argparse.ArgumentParser(description='Train a Single-shot detection network')
-parser.add_argument('--resume', dest='resume', help='train list to use',
+parser.add_argument('--resume', dest='resume', help='resume from epoch',
                     default=-1, type=int)
-parser.add_argument('--prefix', dest='prefix', help='train list to use',
+parser.add_argument('--prefix', dest='prefix', help='model prefix',
                     default="resnet_nexar", type=str)
 
 parser.add_argument('--train_rec', dest='train_rec', help='train file to use',
                     default="../data/nexar/nexar_train_noisy.rec", type=str)
+
 parser.add_argument('--val_rec', dest='val_rec', help='val file to use',
                     default="../data/nexar/nexar_val_noisy.rec", type=str)
+
+
+parser.add_argument('--net', dest='net', help='val file to use',
+                    default="resnet18", type=str)
 
 def get_lr_scheduler(learning_rate, lr_refactor_step, lr_refactor_ratio,
                      num_example, batch_size, begin_epoch):
@@ -39,8 +46,9 @@ def get_lr_scheduler(learning_rate, lr_refactor_step, lr_refactor_ratio,
 
 if __name__ == '__main__':
     # download data
-    sym = resnet.get_symbol(4,18,"3,32,32")
     pargs = parser.parse_args()
+
+    sym = resnet.get_symbol(4,18,"3,32,32") if(pargs.net=="resnet18") else mobilenet_2.get_symbol_compact(4, alpha=0.25, resolution=32)
 
     logging.getLogger().setLevel(logging.DEBUG)
 
