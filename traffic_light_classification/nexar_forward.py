@@ -2,7 +2,7 @@ import mxnet as mx
 import cv2
 import numpy as np
 # define a simple data batch
-
+import time
 from collections import namedtuple
 import argparse
 
@@ -13,7 +13,6 @@ parser.add_argument('--epoch', dest='epoch', help='train list to use',
                     default=0, type=int)
 parser.add_argument('--image_path', dest='image_path', help='train list to use',
                     default="../data/demo/65.png", type=str)
-
 Batch = namedtuple('Batch', ['data'])
 
 
@@ -46,8 +45,9 @@ def image_forward(fname,prefix,epoch,ctx=mx.cpu(0)):
     mod.set_params(args, auxs)
 
     metric = mx.metric.Accuracy()
-
+    begin=time.time()
     mod.forward(Batch([mx.nd.array(img)]))
+    duration=time.time()-begin
     prob = mod.get_outputs()[0].asnumpy()
     # print the top-5
     results={}
@@ -56,6 +56,7 @@ def image_forward(fname,prefix,epoch,ctx=mx.cpu(0)):
     results['prediction']=labels[a[0]]
     for i in a[0:4]:
         results[labels[i]]=prob[i]
+    results["duration"]=duration
     return results
 
 
