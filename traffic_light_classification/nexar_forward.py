@@ -20,7 +20,7 @@ Batch = namedtuple('Batch', ['data'])
 
 
 
-def image_forward(fname,prefix,epoch):
+def image_forward(fname,prefix,epoch,ctx=mx.cpu(0)):
     # img = cv2.cvtColor(cv2.imread("/media/tapir/Data/Thesis/Datasets/nexar/nexar_cropped_lights/28862_0.jpg"), cv2.COLOR_BGR2RGB)
     img = cv2.cvtColor(cv2.imread(fname), cv2.COLOR_BGR2RGB)
 
@@ -39,7 +39,7 @@ def image_forward(fname,prefix,epoch):
 
 
     labels = {0: "green", 1: "yellow", 2: "red", 3:"none"}
-    mod = mx.mod.Module(symbol=sym, context=mx.cpu(0))
+    mod = mx.mod.Module(symbol=sym, context=ctx)
 
     mod.bind(for_training=False, data_shapes=[('data', (1, 3, 32, 32))])
 
