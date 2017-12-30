@@ -51,18 +51,19 @@ def Conv_DPW(data, depth=1, stride=(1, 1), name='', idx=0, suffix=''):
 def get_symbol_compact(num_classes, alpha=1, resolution=224, **kwargs):
     assert alpha in alpha_values, 'Invalid alpha={0}, must be one of {1}'.format(alpha, alpha_values)
     assert resolution % 32 == 0, 'resolution must be multiple of 32'
-    init_stride=(1,1) if(resolution==32) else (2,2)
+    stride=(1,1) if(resolution==32) else (2,2)
+    print(stride)
     base = int(32 * alpha)
 
     data = mx.symbol.Variable(name="data")  # 224
-    conv_1 = Conv(data, num_filter=base, kernel=(3, 3), pad=(1, 1), stride=init_stride, name="conv_1")  # 32*alpha, 224/112
+    conv_1 = Conv(data, num_filter=base, kernel=(3, 3), pad=(1, 1), stride=stride, name="conv_1")  # 32*alpha, 224/112
 
     conv_2_dw = Conv(conv_1, num_group=base, num_filter=base, kernel=(3, 3), pad=(1, 1), stride=(1, 1), name="conv_2_dw")  # 112/112
     conv_2 = Conv(conv_2_dw, num_filter=base * 2, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="conv_2")  # 32*alpha, 112/112
 
-    conv_3_dpw = Conv_DPW(conv_2, depth=base * 2, stride=(2, 2), idx=3)  # 64*alpha, 112/56 => 56/56
+    conv_3_dpw = Conv_DPW(conv_2, depth=base * 2, stride=stride, idx=3)  # 64*alpha, 112/56 => 56/56
     conv_4_dpw = Conv_DPW(conv_3_dpw, depth=base * 4, stride=(1, 1), idx=4)  # 128*alpha, 56/56 =>56/56
-    conv_5_dpw = Conv_DPW(conv_4_dpw, depth=base * 4, stride=(2, 2), idx=5)  # 128*alpha, 56/28 => 28/28
+    conv_5_dpw = Conv_DPW(conv_4_dpw, depth=base * 4, stride=stride, idx=5)  # 128*alpha, 56/28 => 28/28
     conv_6_dpw = Conv_DPW(conv_5_dpw, depth=base * 8, stride=(1, 1), idx=6)  # 256*alpha, 28/28 => 28/28
     conv_7_dpw = Conv_DPW(conv_6_dpw, depth=base * 8, stride=(2, 2), idx=7)  # 256*alpha, 28/14 => 14/14
     conv_dpw = conv_7_dpw
