@@ -42,9 +42,9 @@ def Conv(data, num_filter=1, kernel=(1, 1), stride=(1, 1), pad=(0, 0), num_group
     return act
 
 
-def Conv_DPW(data, depth=1, stride=(1, 1), name='', idx=0, suffix=''):
+def Conv_DPW(data, depth=1, stride=(1, 1), name='', idx=0, expand=1, suffix=''):
     conv_dw = Conv(data, num_group=depth, num_filter=depth, kernel=(3, 3), pad=(1, 1), stride=stride, name="conv_%d_dw" % (idx), suffix=suffix)
-    conv = Conv(conv_dw, num_filter=depth * stride[0], kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="conv_%d" % (idx), suffix=suffix)
+    conv = Conv(conv_dw, num_filter=depth * stride[0]*expand, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="conv_%d" % (idx), suffix=suffix)
     return conv
 
 
@@ -61,9 +61,9 @@ def get_symbol_compact(num_classes, alpha=1, resolution=224, **kwargs):
     conv_2_dw = Conv(conv_1, num_group=base, num_filter=base, kernel=(3, 3), pad=(1, 1), stride=(1, 1), name="conv_2_dw")  # 112/112
     conv_2 = Conv(conv_2_dw, num_filter=base * 2, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="conv_2")  # 32*alpha, 112/112
 
-    conv_3_dpw = Conv_DPW(conv_2, depth=base * 2, stride=stride, idx=3)  # 64*alpha, 112/56 => 56/56
+    conv_3_dpw = Conv_DPW(conv_2, depth=base * 2, stride=stride, expand=2, idx=3)  # 64*alpha, 112/56 => 56/56
     conv_4_dpw = Conv_DPW(conv_3_dpw, depth=base * 4, stride=(1, 1), idx=4)  # 128*alpha, 56/56 =>56/56
-    conv_5_dpw = Conv_DPW(conv_4_dpw, depth=base * 4, stride=stride, idx=5)  # 128*alpha, 56/28 => 28/28
+    conv_5_dpw = Conv_DPW(conv_4_dpw, depth=base * 4, stride=stride, expand=2, idx=5)  # 128*alpha, 56/28 => 28/28
     conv_6_dpw = Conv_DPW(conv_5_dpw, depth=base * 8, stride=(1, 1), idx=6)  # 256*alpha, 28/28 => 28/28
     conv_7_dpw = Conv_DPW(conv_6_dpw, depth=base * 8, stride=(2, 2), idx=7)  # 256*alpha, 28/14 => 14/14
     conv_dpw = conv_7_dpw
