@@ -4,7 +4,7 @@ import logging
 import sys
 sys.path.append("../symbol")
 import resnet
-import mobilenet_2
+import mobilenet
 
 import mxnet as mx
 
@@ -47,8 +47,8 @@ def get_lr_scheduler(learning_rate, lr_refactor_step, lr_refactor_ratio,
 if __name__ == '__main__':
     # download data
     pargs = parser.parse_args()
+    sym = resnet.get_symbol(4,18,"3,32,32") if(pargs.net=="resnet18") else mobilenet.get_symbol(4,alpha=0.50)
 
-    sym = resnet.get_symbol(4,18,"3,32,32") if(pargs.net=="resnet18") else mobilenet_2.get_symbol_compact(4, alpha=0.25, resolution=32)
 
     logging.getLogger().setLevel(logging.DEBUG)
 
