@@ -32,6 +32,8 @@ def get_model(network, rootpath):
         epoch=9
     if network=="mobilenet050":
         epoch=28
+    else:
+        raise ValueError("the network {} is not defined".format(network))
     return prefix, epoch
 
 
