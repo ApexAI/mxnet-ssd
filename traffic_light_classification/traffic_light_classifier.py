@@ -28,9 +28,9 @@ def get_model(network, rootpath):
     prefix = os.path.join(rootpath, network)
     if network=="resnet18":
         epoch=20
-    if network=="densenet30":
+    elif network=="densenet30":
         epoch=9
-    if network=="mobilenet050":
+    elif network=="mobilenet050":
         epoch=28
     else:
         raise ValueError("the network {} is not defined".format(network))
