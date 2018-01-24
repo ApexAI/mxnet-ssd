@@ -8,11 +8,11 @@ from train.train_net import train_net
 def parse_args():
     parser = argparse.ArgumentParser(description='Train a Single-shot detection network')
     parser.add_argument('--train-path', dest='train_path', help='train record to use',
-                        default=os.path.join(os.getcwd(), 'data', 'train.rec'), type=str)
+                        default=os.path.join(os.getcwd(), 'data', 'coco_apex_train.rec'), type=str)
     parser.add_argument('--train-list', dest='train_list', help='train list to use',
                         default="", type=str)
     parser.add_argument('--val-path', dest='val_path', help='validation record to use',
-                        default=os.path.join(os.getcwd(), 'data', 'val.rec'), type=str)
+                        default=os.path.join(os.getcwd(), 'data', 'coco_apex_val.rec'), type=str)
     parser.add_argument('--val-list', dest='val_list', help='validation list to use',
                         default="", type=str)
     parser.add_argument('--network', dest='network', type=str, default='vgg16_reduced',
@@ -40,7 +40,7 @@ def parse_args():
                         default=20, type=int)
     parser.add_argument('--data-shape', dest='data_shape', type=int, default=300,
                         help='set image shape')
-    parser.add_argument('--label-width', dest='label_width', type=int, default=-1,
+    parser.add_argument('--label-width', dest='label_width', type=int, default=326,
                         help='force padding label width to sync across train and validation')
     parser.add_argument('--lr', dest='learning_rate', type=float, default=0.004,
                         help='learning rate')

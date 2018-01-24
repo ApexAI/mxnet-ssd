@@ -188,6 +188,8 @@ def DenseNet(units, num_stage, growth_rate, num_class, data_type="imagenet", red
     return mx.symbol.SoftmaxOutput(data=fc1, name='softmax')
 
 
-def get_symbol(num_class,**kwargs):
-    return mx.symbol.load("symbol/densenet-121-symbol.json")
-    #return DenseNet([6, 12, 24, 16], 4, 32, num_class=4);
+def get_symbol(num_class, num_layers,**kwargs):
+    if(num_layers==121):
+        return mx.symbol.load("symbol/densenet-121-symbol.json")
+    else:
+        return DenseNet(units=[9,9,9],num_stage= 3,growth_rate= 12,num_class= num_class,data_type= "imagenet",bottle_neck=False)

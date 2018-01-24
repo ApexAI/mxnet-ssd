@@ -202,6 +202,20 @@ def get_config(network, data_shape, **kwargs):
         normalizations = -1
         steps = []
         return locals()
+    elif network == 'densenet30':
+        num_layers = 30
+        image_shape = '3,224,224'  # resnet require it as shape check
+        network = 'densenet'
+        from_layers = ['TBstage2_relu1', 'relu1', '', '', '', '']
+        num_filters = [-1, -1, 512, 256, 256, 256]
+        strides = [-1, -1, 2, 2, 2, 2]
+        pads = [-1, -1, 1, 1, 1, 1]
+        sizes = [[.1, .141], [.2,.272], [.37, .447], [.54, .619], [.71, .79], [.88, .961]]
+        ratios = [[1,2,.5], [1,2,.5,3,1./3], [1,2,.5,3,1./3], [1,2,.5,3,1./3], \
+            [1,2,.5], [1,2,.5]]
+        normalizations = -1
+        steps = []
+        return locals()
     elif network == 'se_resnext18':
         num_layers = 18
         image_shape = '3,224,224'  # resnet require it as shape check
