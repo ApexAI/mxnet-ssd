@@ -48,6 +48,8 @@ def parse_args():
                         help='use PASCAL VOC 07 metric')
     parser.add_argument('--deploy', dest='deploy_net', help='Load network from model',
                         action='store_true', default=False)
+    parser.add_argument('--cars_only', dest='cars_only', type=bool, default=False,
+                        help='Evaluate fairly in a car-only dataset')
     args = parser.parse_args()
     return args
 
@@ -84,4 +86,4 @@ if __name__ == '__main__':
                  path_imglist=args.list_path, nms_thresh=args.nms_thresh,
                  force_nms=args.force_nms, ovp_thresh=args.overlap_thresh,
                  use_difficult=args.use_difficult, class_names=class_names,
-                 voc07_metric=args.use_voc07_metric)
+                 voc07_metric=args.use_voc07_metric, cars_only=args.cars_only)

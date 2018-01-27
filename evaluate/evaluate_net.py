@@ -13,7 +13,7 @@ def evaluate_net(net, path_imgrec, num_classes, mean_pixels, data_shape,
                  model_prefix, epoch, ctx=mx.cpu(), batch_size=1,
                  path_imglist="", nms_thresh=0.45, force_nms=False,
                  ovp_thresh=0.5, use_difficult=False, class_names=None,
-                 voc07_metric=False):
+                 voc07_metric=False, cars_only=False):
     """
     evalute network given validation record file
 
@@ -83,12 +83,11 @@ def evaluate_net(net, path_imgrec, num_classes, mean_pixels, data_shape,
         fixed_param_names=net.list_arguments())
     mod.bind(data_shapes=eval_iter.provide_data, label_shapes=eval_iter.provide_label)
     mod.set_params(args, auxs, allow_missing=False, force_init=True)
-
     # run evaluation
     if voc07_metric:
-        metric = VOC07MApMetric(ovp_thresh, use_difficult, class_names)
+        metric = VOC07MApMetric(ovp_thresh, use_difficult, class_names, cars_only)
     else:
-        metric = MApMetric(ovp_thresh, use_difficult, class_names)
+        metric = MApMetric(ovp_thresh, use_difficult, class_names,cars_only)
     results = mod.score(eval_iter, metric, num_batch=None)
     for k, v in results:
         print("{}: {}".format(k, v))

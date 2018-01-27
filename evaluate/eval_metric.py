@@ -16,7 +16,7 @@ class MApMetric(mx.metric.EvalMetric):
     pred_idx : int
         prediction index in network output list
     """
-    def __init__(self, ovp_thresh=0.5, use_difficult=False, class_names=None, pred_idx=0):
+    def __init__(self, ovp_thresh=0.5, use_difficult=False, class_names=None, cars_only=False, pred_idx=0):
         super(MApMetric, self).__init__('mAP')
         if class_names is None:
             self.num = None
@@ -31,6 +31,7 @@ class MApMetric(mx.metric.EvalMetric):
         self.ovp_thresh = ovp_thresh
         self.use_difficult = use_difficult
         self.class_names = class_names
+        self.cars_only=cars_only
         self.pred_idx = int(pred_idx)
 
     def reset(self):
@@ -115,7 +116,7 @@ class MApMetric(mx.metric.EvalMetric):
             while (pred.shape[0] > 0):
                 cid = int(pred[0, 0])
                 indices = np.where(pred[:, 0].astype(int) == cid)[0]
-                if cid < 0:
+                if cid < 0 or (self.cars_only and cid !=0):
                     pred = np.delete(pred, indices, axis=0)
                     continue
                 dets = pred[indices]
