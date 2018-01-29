@@ -46,7 +46,8 @@ def create_lst():
             regions_to_paint.append(get_rectangle_corners(ignored_box.attrib,False))
 
         for idx, frame in enumerate(root.iter('frame')):
-            line = str(idx) + "\t" + str(2) + "\t" + str(6) + "\t"
+            i+=1
+            line = str(i) + "\t" + str(2) + "\t" + str(6) + "\t"
             image_file=image_folder + "/" + seq + "/img" + frame.attrib['num'].zfill(5) + ".jpg"
             image=Image.open(image_file)
             draw = ImageDraw.Draw(image)

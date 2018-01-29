@@ -80,6 +80,7 @@ def parse_args():
                         help='string of comma separated names, or text filename')
     parser.add_argument('--benchmark', dest='benchmark', action='store_true', default=False,
                         help='benchmark')
+
     args = parser.parse_args()
     return args
 
@@ -122,8 +123,16 @@ if __name__ == '__main__':
     # run detection
     #detector.detect_and_visualize(image_list, args.dir, args.extension,
     #                              class_names, args.thresh, args.show_timer)
-    with open('demo_filenames') as f:
-        ims = f.read().splitlines()
+
+    imroot="/home/tapir/Documents/Thesis/datasets/detrac_small/Insight-MVT_Annotation_Train/MVI_20011"
+    ims=[]
+
+    for i in range(1,665):
+        imname="img"+str(i).zfill(5)+".jpg"
+        ims.append(os.path.join(imroot,imname))
+
+    #with open('demo_filenames') as f:
+    #    ims = f.read().splitlines()
 
     detector.visualize_stream(ims, args.dir, args.extension,
                                   class_names, args.thresh, args.show_timer, args.benchmark)
