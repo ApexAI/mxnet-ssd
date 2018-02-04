@@ -20,7 +20,7 @@ loop=pargs.loop
 
 for i in range(loop):
     dev=mx.cpu(0) if pargs.device=="cpu" else mx.gpu(0)
-    prediction = nexar_forward.image_forward(pargs.image_path, pargs.prefix, pargs.epoch, dev)
+    prediction = nexar_forward.image_forward([pargs.image_path], pargs.prefix, pargs.epoch, dev)
     duration=prediction["duration"]
     if(i is not 0):
         total+=duration
