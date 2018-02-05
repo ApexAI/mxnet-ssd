@@ -176,7 +176,7 @@ class AssistedSupervisor():
 
     def select_directory(self):
         self.reset()
-        self.images_path= tkFileDialog.askdirectory(initialdir="/home/tapir/Downloads/Images",title='Choose a directory')
+        self.images_path= tkFileDialog.askdirectory(initialdir=".",title='Choose a directory')
         self.select_folder_button['text']="Select new directory"
 
     def select_model(self):
