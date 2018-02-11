@@ -7,7 +7,7 @@ from PIL import Image, ImageTk
 import platform
 import subprocess
 import ttk
-
+import re
 opsys = platform.system()
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -137,17 +137,19 @@ class AssistedSupervisor():
         self.update_display()
 
     def classify_images(self):
+        re_prog = re.compile(".*\.(png|jpg|PNG|JPG|JPEG|jpeg|gif)$")  # image check
+
         def compare_filename(s1, s2):
             return cmp(int(s1[0:len(s1) - 4]), int(s2[0:len(s2) - 4]))
 
         try:
-            print "try"
             self.images = sorted(os.listdir(self.images_path),cmp=compare_filename)
         except:
-            print "except"
             self.images=sorted(os.listdir(self.images_path))
 
+
         self.images=[os.path.join(self.images_path,im) for im in self.images]
+        self.images = [elem for elem in self.images if re_prog.match(elem)]
 
 
         self.num_imgs=len(self.images)

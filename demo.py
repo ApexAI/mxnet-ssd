@@ -124,12 +124,12 @@ if __name__ == '__main__':
     #detector.detect_and_visualize(image_list, args.dir, args.extension,
     #                              class_names, args.thresh, args.show_timer)
 
-    imroot="/home/tapir/Documents/Thesis/datasets/detrac_small/Insight-MVT_Annotation_Train/MVI_20011"
-    ims=[]
+    imroot="/home/tapir/Documents/Thesis/datasets/detrac_small/Insight-MVT_Annotation_Train/MVI_20012"
+    ims=[os.path.join(imroot,im) for im in os.listdir(imroot)]
 
-    for i in range(1,665):
-        imname="img"+str(i).zfill(5)+".jpg"
-        ims.append(os.path.join(imroot,imname))
+    #for i in range(1,665):
+    #    imname="img"+str(i).zfill(5)+".jpg"
+    #    ims.append(os.path.join(imroot,imname))
 
     #with open('demo_filenames') as f:
     #    ims = f.read().splitlines()

@@ -89,7 +89,8 @@ if __name__ == '__main__':
 
     train_iter = mx.io.ImageRecordIter(
       path_imgrec=pargs.train_rec, data_name="data", label_name="softmax_label",
-      batch_size=pargs.batch_size, data_shape=(3,32,32), shuffle=True, rand_crop=True, rand_mirror=True)
+      batch_size=pargs.batch_size, data_shape=(3,32,32), shuffle=True, rand_crop=True, rand_mirror=True, max_rotate_angle=20, max_shear_ratio=0.1,
+        random_h=20,random_s=30,random_l=30)
 
     valid_iter = mx.io.ImageRecordIter(
       path_imgrec=pargs.val_rec, data_name="data", label_name="softmax_label",
