@@ -54,10 +54,9 @@ def image_forward(image_names,prefix,epoch, batch_size=1, ctx=mx.cpu(0)):
             images.append(img[0])
         begin = time.time()
         mod.forward(Batch([mx.nd.array(images)]))
-        batch_duration=time.time() - begin
-        durations.append(time.time() - begin)
         #probs.append(mod.get_outputs())
         probs=mod.get_outputs()[0].asnumpy()
+        batch_duration=time.time() - begin
 
         for prob in probs:
             result = {}

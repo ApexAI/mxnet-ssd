@@ -20,10 +20,11 @@ loop=pargs.loop
 
 for i in range(loop):
     dev=mx.cpu(0) if pargs.device=="cpu" else mx.gpu(0)
-    prediction = nexar_forward.image_forward([pargs.image_path], pargs.prefix, pargs.epoch, dev)
-    duration=prediction["duration"]
+    prediction = nexar_forward.image_forward([pargs.image_path], pargs.prefix, pargs.epoch, 1, dev)
+    duration=prediction[0]["duration"]
     if(i is not 0):
         total+=duration
     print(duration)
 
+print "Average forward pass time in " + pargs.device + " :"
 print total/(loop-1)
