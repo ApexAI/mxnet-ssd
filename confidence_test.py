@@ -5,7 +5,6 @@ from dataset.iterator import DetIter
 import time
 import numpy as np
 import cv2
-import matplotlib.pyplot as plt
 import random
 from detect.detector import Detector
 from symbol.symbol_factory import get_symbol
@@ -81,10 +80,6 @@ for im in ims:
         orig=img
         img[:, :, (0, 1, 2)] = img[:, :, (2, 1, 0)]
         # self.visualize_detection(img, det, classes, thresh)
-        plt.gca().patches = []
-        plt.gca().texts = []
-
-        plt.imshow(img)
         height = img.shape[0]
         width = img.shape[1]
         colors = dict()
