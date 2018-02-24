@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import random
 from detect.detector import Detector
 from symbol.symbol_factory import get_symbol
+import os
 
 from PIL import Image
 
@@ -16,14 +17,18 @@ from PIL import ImageDraw
 from PIL import ImageFont
 
 
-parser = argparse.ArgumentParser(description='Single-shot detection network demo')
+parser = argparse.ArgumentParser(description='order and save detections by confidence')
 
 parser.add_argument('--epoch', dest='epoch', help='epoch of trained model',
                     default=0, type=int)
 parser.add_argument('--prefix', dest='prefix', help='trained model prefix',
                     default="resnet18",
                     type=str)
-parser.add_argument('--batch-size', dest='batch_size', help='epoch of trained model',
+
+parser.add_argument('--dir', dest='dir', help='dir of images',
+                    default=".",
+                    type=str)
+parser.add_argument('--batch-size', dest='batch_size', help='batchsize',
                     default=1, type=int)
 
 data_shape=512
@@ -33,7 +38,7 @@ classes=['car','notcar']
 thresh=0.2
 
 
-ims=["/mnt/data/ros_ws/img0131_2/left0445.jpg","/mnt/data/ros_ws/img0131_2/left0773.jpg"]
+ims=os.listdir(pargs.dir)
 
 loadsym, args, auxs = mx.model.load_checkpoint(pargs.prefix, pargs.epoch)
 
@@ -95,7 +100,6 @@ for im in ims:
                     xmax = int(det[i, 4] * width)
                     ymax = int(det[i, 5] * height)
 
-                    crop_img = orig[ymin-20:ymax, xmin:xmax].copy()
                     boxes.append((im,score,(xmin,ymin,xmax,ymax)))
 
 
