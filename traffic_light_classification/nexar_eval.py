@@ -16,7 +16,7 @@ sym, args, auxs = mx.model.load_checkpoint(pargs.prefix, pargs.epoch)
 
 valid_iter = mx.io.ImageRecordIter(
     path_imgrec=pargs.rec, data_name="data", label_name="softmax_label",
-    batch_size=128, data_shape=(3, 32, 32))
+    batch_size=32, data_shape=(3, 32, 32))
 
 
 mod = mx.mod.Module(symbol=sym, context=mx.gpu(0))

@@ -119,7 +119,7 @@ if __name__ == '__main__':
 
     subprocess.check_call(["python",
         os.path.join(curr_path, "..", "mxnet/tools/im2rec.py"),
-        os.path.abspath(args.target), os.path.abspath(args.root_path),
+        os.path.abspath(args.target), '.',
         "--shuffle", str(int(args.shuffle)), "--pack-label", "1"])
 
     print("Record file {} generated...".format(args.target.split('.')[0] + '.rec'))
