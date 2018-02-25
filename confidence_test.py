@@ -97,7 +97,12 @@ for im in ims:
 
                     boxes.append((im,score,(xmin,ymin,xmax,ymax)))
 
+                    if score > 0.5:
+                        cv2.rectangle(img, (xmin, ymin), (xmax, ymax), (255, 0, 0), 2)
+                        cv2.putText(img, str(score), (xmin, ymin-5), font, 0.5, (255, 0, 0), 1, cv2.LINE_AA)
 
+    cv2.imwrite('car_models/daylight_detections/{}.png'.format(idx), cv2.cvtColor(img, cv2.COLOR_RGB2BGR))
+    idx+=1
 
 def compare_score(s1, s2):
     return cmp(s1[1],s2[1])
@@ -111,8 +116,8 @@ for bidx, box in enumerate(sorted_boxes):
     (xmin,ymin,xmax,ymax)=box[2]
 
     img = cv2.imread(imfile)[ymin-20:ymax, xmin:xmax]
-    cv2.putText(img, str(score), (5, 30), font, 0.1*height/300, (255, 0, 0), 1, cv2.LINE_AA)
-    cv2.imwrite('car_models/cropped/{}.png'.format(bidx), cv2.cvtColor(img, cv2.COLOR_RGB2BGR))
+    cv2.putText(img, str(score), (5, 30), font, 0.1*height/300, (0, 0, 255), 1, cv2.LINE_AA)
+    cv2.imwrite('car_models/cropped/{}.png'.format(bidx), img)
 
 
 scores=np.array([s[1] for s in sorted_boxes])
