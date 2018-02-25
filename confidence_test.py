@@ -37,7 +37,7 @@ classes=['car','notcar']
 thresh=0.2
 
 
-ims=[os.path.join(pargs.dir,el) for el in os.listdir(pargs.dir)]
+ims=[os.path.join(pargs.dir,el) for el in sorted(os.listdir(pargs.dir))]
 
 loadsym, args, auxs = mx.model.load_checkpoint(pargs.prefix, pargs.epoch)
 
