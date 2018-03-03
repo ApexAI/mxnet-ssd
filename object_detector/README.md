@@ -2,23 +2,23 @@
 ### Usage:
 Download the model files. It contains a json file defining the network and a .params file containing the weights. Example:`resnet18-symbol.json` and `resnet18-0001.params`
 
-Constructor Parameters:
-**prefix**:          The model file's prefix. Example:`path/resnet18` for `path/resnet18-symbol.json`
-**epoch**:           The model file's epoch.  Example:  `12`        for `path/resnet18-0012.params`
-**conf_thresh**:     Confidence threshold to filter the detections.
-**classes**:         List of class names. You can ignore for single-class detection.
-**device**:          Device to run the network: cpu or gpu.
-**data_shape**:      Shape the images will be resized into. Must be fitting to the network. Ignore if not sure.
-**verbose**:         Displays debugging messages if set to True.
-**batch_size**:      The size of each batch. Currently only single image supported.
+Constructor Parameters:  
+**prefix**:          The model file's prefix. Example:`path/resnet18` for `path/resnet18-symbol.json`  
+**epoch**:           The model file's epoch.  Example:  `12`        for `path/resnet18-0012.params`  
+**conf_thresh**:     Confidence threshold to filter the detections.   
+**classes**:         List of class names. You can ignore for single-class detection.  
+**device**:          Device to run the network: cpu or gpu.  
+**data_shape**:      Shape the images will be resized into. Must be fitting to the network. Ignore if not sure.  
+**verbose**:         Displays debugging messages if set to True.  
+**batch_size**:      The size of each batch. Currently only single image supported.  
 
-Output is a list of dictionaries that contain the following keys: 
-**xmin**        : Bbox coordinate.
-**ymin**        : Bbox coordinate.
-**xmax**        : Bbox coordinate.
-**ymax**        : Bbox coordinate.
-**confidence**  : Confidence value associated with the detection
-**class**       : Predicted class name of the detection. Will only be accurate if the constructor parameter classes is correct.
+Output is a list of dictionaries that contain the following keys:  
+**xmin**        : Bbox coordinate.  
+**ymin**        : Bbox coordinate.  
+**xmax**        : Bbox coordinate.  
+**ymax**        : Bbox coordinate.  
+**confidence**  : Confidence value associated with the detection  
+**class**       : Predicted class name of the detection. Will only be accurate if the constructor parameter classes is correct.  
 
 ### Example:
 ```python
