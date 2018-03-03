@@ -31,8 +31,8 @@ epoch  = 12
 threshold=0.5
 
 image       =   cv2.imread("image.jpg")
-my_detector =   object_detector(prefix, epoch, classes=['car'], conf_thresh=threshold, verbose=True, device='cpu')
-detections  =   mydetector.detect_objects(cvim)
+my_detector =   object_detector(prefix, epoch,, conf_thresh=threshold, classes=['car'])
+detections  =   mydetector.detect_objects(image)
 
 for i, det in enumerate(detections):
     print('\n Detected box {}:'.format(i))
