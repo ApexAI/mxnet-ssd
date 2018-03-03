@@ -43,7 +43,7 @@ loadsym, args, auxs = mx.model.load_checkpoint(pargs.prefix, pargs.epoch)
 
 net = get_symbol('resnet18', data_shape, num_classes=2, nms_thresh=0.5)
 
-mod = mx.mod.Module(net, label_names=None, context=mx.cpu())
+mod = mx.mod.Module(net, label_names=None, context=mx.gpu())
 
 mod.bind(data_shapes=[('data', (pargs.batch_size, 3, data_shape, data_shape))])
 
