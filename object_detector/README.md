@@ -31,7 +31,7 @@ epoch  = 12
 threshold=0.5
 
 image       =   cv2.imread("image.jpg")
-my_detector =   object_detector(prefix, epoch,, conf_thresh=threshold, classes=['car'])
+my_detector =   object_detector(prefix, epoch, conf_thresh=threshold, classes=['car'])
 detections  =   mydetector.detect_objects(image)
 
 for i, det in enumerate(detections):
@@ -41,7 +41,7 @@ for i, det in enumerate(detections):
 ```
 Output:
 ```
-Detection 0:
+Detected box 0:
 confidence: 0.774845957756
 ymax: 737
 xmax: 667
@@ -49,7 +49,7 @@ xmin: 537
 ymin: 622
 class: car
 
-Detection 1:
+Detected box 1:
 confidence: 0.70752632618
 ymax: 739
 xmax: 1192
