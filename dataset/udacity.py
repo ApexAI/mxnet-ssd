@@ -115,6 +115,41 @@ def pedestrian_classifier(add_noise=True):
     with open("udacity_test.lst",'w') as f:
         f.write(lst_data)
 
-pedestrian_classifier()
 
+
+def car_detection_lst():
+    data_dict=populate(["car","truck"])
+    lst_data=''
+    label_map={'car':0,'truck':0}
+
+    lst_idx=0
+
+    for key,val in data_dict.iteritems():
+        image_file = key
+        image = Image.open(image_file)
+        im_w, im_h = image.size
+
+        lst_line = str(lst_idx) + "\t" + str(2) + "\t" + str(6) + "\t"
+
+        for box in val:
+            obj_cls=box[4]
+
+            x0 = float(max(box[0], 0))
+            y0 = float(max(box[1], 0))
+            x1 = float(min(box[2], im_w - 1))
+            y1 = float(min(box[3], im_h - 1))
+
+
+            label = "0\t{0:.4f}\t{1:.4f}\t{2:.4f}\t{3:.4f}\t0\t".format(x0/im_w, y0/im_h, x1/im_w, y1/im_h)
+            lst_line += label
+
+        lst_line += image_file + "\n"
+        lst_data += lst_line
+        lst_idx += 1
+
+    with open("udacity_cars.lst",'w') as f:
+        f.write(lst_data)
+
+#pedestrian_classifier()
+car_detection_lst()
 
