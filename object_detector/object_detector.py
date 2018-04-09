@@ -21,10 +21,9 @@ class object_detector(object):
     :param batch_size:      The size of each batch. Currently not supported
     """
 
-    def __init__(self, prefix, epoch, conf_thresh, classes=None, device='gpu', data_shape=512, verbose=False, batch_size=1):
+    def __init__(self, prefix, epoch, conf_thresh, classes=None, device='gpu', data_shape=512, log_level=logging.ERROR, batch_size=1):
         logging.basicConfig()
         self.logger=logging.getLogger("Detection")
-        log_level=logging.DEBUG if(verbose) else logging.INFO
         self.logger.setLevel(log_level)
         self.data_shape=data_shape
         self.conf_thresh=conf_thresh
