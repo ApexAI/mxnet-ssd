@@ -3,6 +3,7 @@ import cv2
 import numpy as np
 import logging
 import time
+import warnings
 #from collections import namedtuple
 #Batch = namedtuple('Batch', ['data'])
 
@@ -33,10 +34,12 @@ class object_detector(object):
         self.logger.info("Device type used for detection: {} ".format(ctx.device_type))
 
         #Loading the model
-        sym, args, auxs = mx.model.load_checkpoint(prefix, epoch)
-        self.mod = mx.mod.Module(sym, label_names=None, context=ctx)
-        self.mod.bind(data_shapes=[('data', (batch_size, 3, self.data_shape, self.data_shape))])
-        self.mod.set_params(args, auxs)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            sym, args, auxs = mx.model.load_checkpoint(prefix, epoch)
+            self.mod = mx.mod.Module(sym, label_names=None, context=ctx)
+            self.mod.bind(data_shapes=[('data', (batch_size, 3, self.data_shape, self.data_shape))])
+            self.mod.set_params(args, auxs)
 
         self.logger.info("Model loaded successfully")
 
