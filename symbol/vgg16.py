@@ -76,4 +76,4 @@ def get_symbol_(num_classes, num_layers=11, batch_norm=False, dtype='float32', c
     return symbol
 
 def get_symbol(*args, **kwargs):
-    return get_symbol(1000, 16)
+    return get_symbol_(1000, 16)
