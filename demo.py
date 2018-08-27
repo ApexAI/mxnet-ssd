@@ -78,6 +78,7 @@ def parse_args():
     parser.add_argument('--class-names', dest='class_names', type=str,
                         default='dataset/names/apex_coco.names',
                         help='string of comma separated names, or text filename')
+    parser.add_argument('--imroot', dest='imroot', type=str)
     parser.add_argument('--benchmark', dest='benchmark', action='store_true', default=False,
                         help='benchmark')
 
@@ -116,6 +117,7 @@ if __name__ == '__main__':
         prefix = args.prefix + args.network + '_' + str(args.data_shape)
     else:
         prefix = args.prefix
+    print class_names
     detector = get_detector(network, prefix, args.epoch,
                             args.data_shape,
                             (args.mean_r, args.mean_g, args.mean_b),
@@ -124,15 +126,13 @@ if __name__ == '__main__':
     #detector.detect_and_visualize(image_list, args.dir, args.extension,
     #                              class_names, args.thresh, args.show_timer)
 
-    imroot="/home/tapir/Documents/Thesis/datasets/detrac_small/Insight-MVT_Annotation_Train/MVI_20012"
-    ims=[os.path.join(imroot,im) for im in os.listdir(imroot)]
+    #imroot="/mnt/data/ros_ws/img0131/"
 
-    #for i in range(1,665):
-    #    imname="img"+str(i).zfill(5)+".jpg"
-    #    ims.append(os.path.join(imroot,imname))
+    if(args.benchmark):
+        ims= ["data/demo/street.jpg" for n in range(100)]
+    else:
+        ims=[os.path.join(args.imroot,im) for im in sorted(os.listdir(args.imroot))]
 
-    #with open('demo_filenames') as f:
-    #    ims = f.read().splitlines()
 
     detector.visualize_stream(ims, args.dir, args.extension,
                                   class_names, args.thresh, args.show_timer, args.benchmark)
