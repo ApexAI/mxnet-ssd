@@ -7,6 +7,8 @@ from dataset.iterator import DetRecordIter
 from config.config import cfg
 from evaluate.eval_metric import MApMetric, VOC07MApMetric
 import logging
+import time
+
 from symbol.symbol_factory import get_symbol
 
 def evaluate_net(net, path_imgrec, num_classes, mean_pixels, data_shape,
@@ -88,6 +90,10 @@ def evaluate_net(net, path_imgrec, num_classes, mean_pixels, data_shape,
         metric = VOC07MApMetric(ovp_thresh, use_difficult, class_names, cars_only)
     else:
         metric = MApMetric(ovp_thresh, use_difficult, class_names,cars_only)
+
+    begin = time.time()
     results = mod.score(eval_iter, metric, num_batch=None)
+    print("elapsed time: {}".format(time.time() - begin))
+
     for k, v in results:
         print("{}: {}".format(k, v))
