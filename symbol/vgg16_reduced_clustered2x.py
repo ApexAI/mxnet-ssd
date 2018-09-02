@@ -1,4 +1,5 @@
 import mxnet as mx
-from vgg16_reduced_clustered import get_symbol
+import  vgg16_reduced_clustered
 
-get_symbol(shrink=2)
+def get_symbol(*args, **kwargs):
+    return vgg16_reduced_clustered.get_symbol(shrink=2, **kwargs)
