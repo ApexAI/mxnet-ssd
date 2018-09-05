@@ -8,7 +8,7 @@ Kaiming He, Xiangyu Zhang, Shaoqing Ren, Jian Sun. "Identity Mappings in Deep Re
 '''
 import mxnet as mx
 
-def residual_unit(data, num_filter, stride, dim_match, name, bottle_neck=True, bn_mom=0.9, workspace=256, memonger=False):
+def residual_unit(data, num_filter, stride, dim_match, name, bottle_neck=True, bn_mom=0.9, workspace=256, memonger=False, shrink=1):
     """Return ResNet Unit symbol for building ResNet
     Parameters
     ----------
@@ -52,7 +52,7 @@ def residual_unit(data, num_filter, stride, dim_match, name, bottle_neck=True, b
     else:
         bn1 = mx.sym.BatchNorm(data=data, fix_gamma=False, momentum=bn_mom, eps=2e-5, name=name + '_bn1')
         act1 = mx.sym.Activation(data=bn1, act_type='relu', name=name + '_relu1')
-        conv1 = mx.sym.Convolution(data=act1, num_filter=num_filter, kernel=(3,3), stride=stride, pad=(1,1),
+        conv1 = mx.sym.Convolution(data=act1, num_filter=num_filter/shrink, kernel=(3,3), stride=stride, pad=(1,1),
                                       no_bias=True, workspace=workspace, name=name + '_conv1')
         bn2 = mx.sym.BatchNorm(data=conv1, fix_gamma=False, momentum=bn_mom, eps=2e-5, name=name + '_bn2')
         act2 = mx.sym.Activation(data=bn2, act_type='relu', name=name + '_relu2')
@@ -67,7 +67,7 @@ def residual_unit(data, num_filter, stride, dim_match, name, bottle_neck=True, b
             shortcut._set_attr(mirror_stage='True')
         return conv2 + shortcut
 
-def resnet(units, num_stages, filter_list, num_classes, image_shape, bottle_neck=True, bn_mom=0.9, workspace=256, memonger=False):
+def resnet(units, num_stages, filter_list, num_classes, image_shape, bottle_neck=True, bn_mom=0.9, workspace=256, memonger=False, shrink=1):
     """Return ResNet symbol of
     Parameters
     ----------
@@ -103,10 +103,10 @@ def resnet(units, num_stages, filter_list, num_classes, image_shape, bottle_neck
     for i in range(num_stages):
         body = residual_unit(body, filter_list[i+1], (1 if i==0 else 2, 1 if i==0 else 2), False,
                              name='stage%d_unit%d' % (i + 1, 1), bottle_neck=bottle_neck, workspace=workspace,
-                             memonger=memonger)
+                             memonger=memonger, shrink=shrink)
         for j in range(units[i]-1):
             body = residual_unit(body, filter_list[i+1], (1,1), True, name='stage%d_unit%d' % (i + 1, j + 2),
-                                 bottle_neck=bottle_neck, workspace=workspace, memonger=memonger)
+                                 bottle_neck=bottle_neck, workspace=workspace, memonger=memonger, shrink=shrink)
     bn1 = mx.sym.BatchNorm(data=body, fix_gamma=False, eps=2e-5, momentum=bn_mom, name='bn1')
     relu1 = mx.sym.Activation(data=bn1, act_type='relu', name='relu1')
     # Although kernel is not used here when global_pool=True, we should put one
@@ -115,7 +115,7 @@ def resnet(units, num_stages, filter_list, num_classes, image_shape, bottle_neck
     fc1 = mx.symbol.FullyConnected(data=flat, num_hidden=num_classes, name='fc1')
     return mx.symbol.SoftmaxOutput(data=fc1, name='softmax')
 
-def get_symbol(num_classes, num_layers, image_shape, conv_workspace=256, **kwargs):
+def get_symbol(num_classes, num_layers, image_shape, conv_workspace=256, shrink=1, **kwargs):
     """
     Adapted from https://github.com/tornadomeet/ResNet/blob/master/train_resnet.py
     Original author Wei Wu
@@ -166,4 +166,5 @@ def get_symbol(num_classes, num_layers, image_shape, conv_workspace=256, **kwarg
                   num_classes = num_classes,
                   image_shape = image_shape,
                   bottle_neck = bottle_neck,
-                  workspace   = conv_workspace)
+                  workspace   = conv_workspace,
+                  shrink = shrink)

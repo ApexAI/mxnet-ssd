@@ -95,6 +95,21 @@ def get_config(network, data_shape, **kwargs):
         normalizations = -1
         steps = []
         return locals()
+    elif network == 'resnet18_clustered4x':
+        num_layers = 18
+        image_shape = '3,224,224'  # resnet require it as shape check
+        shrink =4
+        network = 'resnet'
+        from_layers = ['_plus5', '_plus7', '', '', '', '']
+        num_filters = [-1, -1, 512/shrink, 256/shrink, 256/shrink, 256/shrink]
+        strides = [-1, -1, 2, 2, 2, 2]
+        pads = [-1, -1, 1, 1, 1, 1]
+        sizes = [[.1, .141], [.2,.272], [.37, .447], [.54, .619], [.71, .79], [.88, .961]]
+        ratios = [[1,2,.5], [1,2,.5,3,1./3], [1,2,.5,3,1./3], [1,2,.5,3,1./3], \
+            [1,2,.5], [1,2,.5]]
+        normalizations = -1
+        steps = []
+        return locals()
     elif network == 'binary_resnet18':
         num_layers = 18
         image_shape = '3,224,224'  # resnet require it as shape check
