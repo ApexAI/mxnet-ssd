@@ -93,7 +93,10 @@ def evaluate_net(net, path_imgrec, num_classes, mean_pixels, data_shape,
 
     begin = time.time()
     results = mod.score(eval_iter, metric, num_batch=None)
-    print("elapsed time: {}".format(time.time() - begin))
-
+    completed=time.time() - begin
+    print("elapsed time: {}".format(completed))
+#
     for k, v in results:
         print("{}: {}".format(k, v))
+
+    return (completed,results)
