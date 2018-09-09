@@ -40,7 +40,6 @@ with open('dataset/names/apex_coco.names', 'r') as f:
 def runtest(batch_size,ctx, pretrained):
     instr=""
     networks = command_bodies_pretrained if pretrained else command_bodies_scratch
-    print networks
     path = "trained_models/{}/".format("pretrained" if pretrained else "scratch")
     for ci, cmd in enumerate(networks):
         print"cmd is:{}".format(cmd)
@@ -57,6 +56,8 @@ def runtest(batch_size,ctx, pretrained):
                                                        cmd[1], result[1][0][1], float(1)/(result[0]/952))
         print res
         instr +=res
+        nm = mx.name.NameManager().current  # hack to workaround mxnet's auto name generation
+        nm._counter = {}
     return instr
 
 
@@ -67,8 +68,7 @@ for bs in batch_sizes:
     for pretrained in training:
         print (bs, ctx, pretrained)
         file_str += runtest(bs, ctx, pretrained)
-        nm = mx.name.NameManager().current  #hack to workaround mxnet's auto name generation
-        nm._counter = {}
+
 
 
 
