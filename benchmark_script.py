@@ -26,7 +26,6 @@ file_str = ""
 command_bodies_scratch= [
     ["mobilenet", "mobilenet_scratch", 70],
     ["resnet18", "resnet18_apex_v3_scratch", 54],
-    ["densenet121", "densenet_test", 56],
     ["pvanet","pvanet_scratch", 87],
     ["shufflenet", "shufflenet_scratch", 66]
 ]
@@ -53,7 +52,7 @@ def runtest(batch_size,ctx, pretrained):
             "Batch size: {}, device: {}, pretrained: {}\n" \
             "for network {}, acc: {}, fps {}\n" \
             "############################################\n".format(batch_size, ctx, pretrained,
-                                                       cmd[1], result[1][0][1], float(1)/(result[0]/952))
+                                                       cmd[1], result[1][5][1], float(1)/(result[0]/952))
         print res
         instr +=res
         nm = mx.name.NameManager().current  # hack to workaround mxnet's auto name generation
