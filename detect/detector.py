@@ -42,6 +42,7 @@ class Detector(object):
         self.data_shape = data_shape
         self.mean_pixels = mean_pixels
         self.sum=0.0
+
     def detect(self, det_iter, show_timer=False):
         """
         detect all images in iterator
@@ -209,13 +210,22 @@ class Detector(object):
             img[:, :, (0, 1, 2)] = img[:, :, (2, 1, 0)]
             self.visualize_detection(img, det, classes, thresh)
 
-    def visualize_stream(self, im_list, root_dir=None, extension=None,
+    def visualize_stream(self, im_list,  out, root_dir=None, extension=None,
                              classes=[], thresh=0.6, show_timer=False, benchmark=False):
 
 
         import cv2
+        import matplotlib
+        matplotlib.use('Agg')
         import matplotlib.pyplot as plt
         import random
+        colors = dict()
+        num_cls = len(classes)
+
+        plt.tick_params(top='off', bottom='off', left='off', right='off', labelleft='off', labelbottom='off')
+
+        for cid in range(num_cls):
+            colors[cid] = (float(cid+1)/(2*num_cls), float(cid+1)/(2*num_cls), 1)
 
         for idx, im in enumerate(im_list):
             dets=self.im_detect([im], root_dir, extension, show_timer=show_timer)
@@ -230,14 +240,13 @@ class Detector(object):
                     plt.imshow(img)
                     height = img.shape[0]
                     width = img.shape[1]
-                    colors = dict()
                     for i in range(det.shape[0]):
                         cls_id = int(det[i, 0])
                         if cls_id >= 0:
                             score = det[i, 1]
                             if score > thresh:
-                                if cls_id not in colors:
-                                    colors[cls_id] = (random.random(), random.random(), random.random())
+                                #if cls_id not in colors:
+                                #    colors[cls_id] = (random.random(), random.random(), random.random())
                                 xmin = int(det[i, 2] * width)
                                 ymin = int(det[i, 3] * height)
                                 xmax = int(det[i, 4] * width)
@@ -255,10 +264,15 @@ class Detector(object):
                                                bbox=dict(facecolor=colors[cls_id], alpha=0.5),
                                                fontsize=12, color='white')
 
-                    plt.draw()
+                    plt.box(False)
+
+                    for spine in plt.gca().spines.values():
+                        spine.set_visible(False)
+
+                    plt.savefig(out+"/{}.jpg".format(idx), bbox_inches='tight', pad_inches=0.0)
 
                     plt.pause(0.000000001)
         print("time elapsed total: %f"%self.sum)
-        print("average time: %f"% (self.sum/171))
+        print("average time: %f"% (self.sum/len(im_list)))
 
 

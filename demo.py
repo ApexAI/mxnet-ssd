@@ -79,6 +79,7 @@ def parse_args():
                         default='dataset/names/apex_coco.names',
                         help='string of comma separated names, or text filename')
     parser.add_argument('--imroot', dest='imroot', type=str)
+    parser.add_argument('--out', dest='out', type=str)
     parser.add_argument('--benchmark', dest='benchmark', action='store_true', default=False,
                         help='benchmark')
 
@@ -134,5 +135,5 @@ if __name__ == '__main__':
         ims=[os.path.join(args.imroot,im) for im in sorted(os.listdir(args.imroot))]
 
 
-    detector.visualize_stream(ims, args.dir, args.extension,
+    detector.visualize_stream(ims, args.out, args.dir, args.extension,
                                   class_names, args.thresh, args.show_timer, args.benchmark)
