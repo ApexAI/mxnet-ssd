@@ -23,7 +23,7 @@ Output is a list of dictionaries that contain the following keys:
 ### Example:
 ```python
 #symbol_file_path  = 'mypath/resnet18-symbol.json'
-#weights_file_path = 'mypath/resnet18-0012.json'
+#weights_file_path = 'mypath/resnet18-0012.params'
 import cv2
 
 prefix = "mypath/resnet18"
