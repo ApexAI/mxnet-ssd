@@ -169,17 +169,17 @@ def train_net(net, train_path, num_classes, batch_size,
     assert len(mean_pixels) == 3, "must provide all RGB mean values"
 
     train_iter = DetRecordIter(train_path, batch_size, data_shape, mean_pixels=mean_pixels,
-        label_pad_width=label_pad_width, path_imglist=train_list, **cfg.train)
+                               label_pad_width=label_pad_width, path_imglist=train_list, **cfg.train)
 
     if val_path:
         val_iter = DetRecordIter(val_path, batch_size, data_shape, mean_pixels=mean_pixels,
-            label_pad_width=label_pad_width, path_imglist=val_list, **cfg.valid)
+                                 label_pad_width=label_pad_width, path_imglist=val_list, **cfg.valid)
     else:
         val_iter = None
 
     # load symbol
     net = get_symbol_train(net, data_shape[1], num_classes=num_classes,
-        nms_thresh=nms_thresh, force_suppress=force_suppress, nms_topk=nms_topk)
+                           nms_thresh=nms_thresh, force_suppress=force_suppress, nms_topk=nms_topk)
 
     # define layers with fixed weight/bias
     if freeze_layer_pattern.strip():
@@ -192,34 +192,34 @@ def train_net(net, train_path, num_classes, batch_size,
     ctx_str = '('+ ','.join([str(c) for c in ctx]) + ')'
     if resume > 0:
         logger.info("Resume training with {} from epoch {}"
-            .format(ctx_str, resume))
+                    .format(ctx_str, resume))
         _, args, auxs = mx.model.load_checkpoint(prefix, resume)
         begin_epoch = resume
     elif finetune > -1:
         logger.info("Start finetuning with {} from epoch {}"
-            .format(ctx_str, finetune))
+                    .format(ctx_str, finetune))
         _, args, auxs = mx.model.load_checkpoint(prefix, finetune)
         begin_epoch = finetune
         # check what layers mismatch with the loaded parameters
         exe = net.simple_bind(mx.cpu(), data=(1, 3, 300, 300), label=(1, 1, 5), grad_req='null')
         arg_dict = exe.arg_dict
-	fixed_param_names = []
+        fixed_param_names = []
         for k, v in arg_dict.items():
             if k in args:
                 if v.shape != args[k].shape:
                     del args[k]
                     logging.info("Removed %s" % k)
                 else:
-		    if not 'pred' in k:
-		    	fixed_param_names.append(k)
+                    if not 'pred' in k:
+                        fixed_param_names.append(k)
     elif pretrained:
         logger.info("Start training with {} from pretrained model {}"
-            .format(ctx_str, pretrained))
+                    .format(ctx_str, pretrained))
         _, args, auxs = mx.model.load_checkpoint(pretrained, epoch)
         args = convert_pretrained(pretrained, args)
     else:
         logger.info("Experimental: start training from scratch with {}"
-            .format(ctx_str))
+                    .format(ctx_str))
         args = None
         auxs = None
         fixed_param_names = None
@@ -236,7 +236,7 @@ def train_net(net, train_path, num_classes, batch_size,
     batch_end_callback = mx.callback.Speedometer(train_iter.batch_size, frequent=frequent)
     epoch_end_callback = mx.callback.do_checkpoint(prefix)
     learning_rate, lr_scheduler = get_lr_scheduler(learning_rate, lr_refactor_step,
-        lr_refactor_ratio, num_example, batch_size, begin_epoch)
+                                                   lr_refactor_ratio, num_example, batch_size, begin_epoch)
     optimizer_params={'learning_rate':learning_rate,
                       'momentum':momentum,
                       'wd':weight_decay,
@@ -250,6 +250,7 @@ def train_net(net, train_path, num_classes, batch_size,
         valid_metric = VOC07MApMetric(ovp_thresh, use_difficult, class_names, pred_idx=3)
     else:
         valid_metric = MApMetric(ovp_thresh, use_difficult, class_names, pred_idx=3)
+
 
     mod.fit(train_iter,
             val_iter,
