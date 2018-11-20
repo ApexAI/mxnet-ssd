@@ -2,10 +2,17 @@ import os
 import csv
 from PIL import Image
 import random
+import argparse
 
-root="/mnt/data/dataset_stuff/udacity"
 
+parser = argparse.ArgumentParser(description='filter openImages v4 dataset into an AD dataset')
 
+parser.add_argument('--object_classes', dest='object_classes', help='comma separated list of classes', default="pedestrian", type=str)
+parser.add_argument('--root', dest='root', help='root dir of the dataset', default="/mnt/data/dataset_stuff/udacity", type=str)
+
+pargs = parser.parse_args()
+
+root=pargs.root
 
 def populate(object_classes=["car"]):
     labels={}
@@ -117,10 +124,9 @@ def pedestrian_classifier(add_noise=True):
 
 
 
-def car_detection_lst():
-    data_dict=populate(["car","truck"])
+def object_detection_lst(fn_out, object_classes=["pedestrian"]):
+    data_dict=populate(object_classes)
     lst_data=''
-    label_map={'car':0,'truck':0}
 
     lst_idx=0
 
@@ -140,16 +146,16 @@ def car_detection_lst():
             y1 = float(min(box[3], im_h - 1))
 
 
-            label = "0\t{0:.4f}\t{1:.4f}\t{2:.4f}\t{3:.4f}\t0\t".format(x0/im_w, y0/im_h, x1/im_w, y1/im_h)
+            label = "{}\t{0:.4f}\t{1:.4f}\t{2:.4f}\t{3:.4f}\t0\t".format(obj_cls, x0/im_w, y0/im_h, x1/im_w, y1/im_h)
             lst_line += label
 
         lst_line += image_file + "\n"
         lst_data += lst_line
         lst_idx += 1
 
-    with open("udacity_cars.lst",'w') as f:
+    with open(fn_out,'w') as f:
         f.write(lst_data)
 
-#pedestrian_classifier()
-car_detection_lst()
 
+if __name__ == "__main__":
+    object_detection_lst(pargs.out, pargs.object_classes)
