@@ -63,7 +63,7 @@ elif PYTHON_VERSION == 3:
     from urllib.request import urlretrieve
 
 class COCO:
-    def __init__(self, annotation_file=None):
+    def __init__(self, annotation_file=None, forbidden_licenses=[]):
         """
         Constructor of Microsoft COCO helper class for reading and visualizing annotations.
         :param annotation_file (str): location of annotation file
@@ -81,20 +81,24 @@ class COCO:
             print('Done (t={:0.2f}s)'.format(time.time()- tic))
             self.dataset = dataset
             self.createIndex()
+            self.forbidden_licenses=forbidden_licenses
 
     def createIndex(self):
         # create index
         print('creating index...')
         anns, cats, imgs = {}, {}, {}
         imgToAnns,catToImgs = defaultdict(list),defaultdict(list)
-        if 'annotations' in self.dataset:
-            for ann in self.dataset['annotations']:
-                imgToAnns[ann['image_id']].append(ann)
-                anns[ann['id']] = ann
 
         if 'images' in self.dataset:
             for img in self.dataset['images']:
-                imgs[img['id']] = img
+                if img['license'] not in self.forbidden_licenses:
+                    imgs[img['id']] = img
+
+        if 'annotations' in self.dataset:
+            for ann in self.dataset['annotations']:
+                if ann['image_id'] in imgs:
+                    imgToAnns[ann['image_id']].append(ann)
+                    anns[ann['id']] = ann
 
         if 'categories' in self.dataset:
             for cat in self.dataset['categories']:
@@ -102,7 +106,8 @@ class COCO:
 
         if 'annotations' in self.dataset and 'categories' in self.dataset:
             for ann in self.dataset['annotations']:
-                catToImgs[ann['category_id']].append(ann['image_id'])
+                if ann['image_id'] in imgs:
+                    catToImgs[ann['category_id']].append(ann['image_id'])
 
         print('index created!')
 
