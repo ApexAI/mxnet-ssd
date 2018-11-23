@@ -224,8 +224,10 @@ class Detector(object):
 
         plt.tick_params(top='off', bottom='off', left='off', right='off', labelleft='off', labelbottom='off')
 
-        for cid in range(num_cls):
-            colors[cid] = (float(cid+1)/(2*num_cls), float(cid+1)/(2*num_cls), 1)
+        colors = {0: (29, 56, 247), 1: (255, 32, 120), 2: (98, 176, 168), 3: (143, 155, 39), 4: (244, 214, 64)}
+        if len(classes) > 5:
+            for cid in range(num_cls):
+                colors[cid] = (float(cid+1)/(2*num_cls)*255, float(cid+1)/(2*num_cls)*255, (2*num_cls-2*cid)*(255)/(2*num_cls))
 
         for idx, im in enumerate(im_list):
             dets=self.im_detect([im], root_dir, extension, show_timer=show_timer)
@@ -233,11 +235,7 @@ class Detector(object):
                 for k, det in enumerate(dets):
                     img = cv2.imread(im)
                     img[:, :, (0, 1, 2)] = img[:, :, (2, 1, 0)]
-                    #self.visualize_detection(img, det, classes, thresh)
-                    plt.gca().patches=[]
-                    plt.gca().texts=[]
 
-                    plt.imshow(img)
                     height = img.shape[0]
                     width = img.shape[1]
                     for i in range(det.shape[0]):
@@ -245,33 +243,20 @@ class Detector(object):
                         if cls_id >= 0:
                             score = det[i, 1]
                             if score > thresh:
-                                #if cls_id not in colors:
-                                #    colors[cls_id] = (random.random(), random.random(), random.random())
                                 xmin = int(det[i, 2] * width)
                                 ymin = int(det[i, 3] * height)
                                 xmax = int(det[i, 4] * width)
                                 ymax = int(det[i, 5] * height)
-                                rect = plt.Rectangle((xmin, ymin), xmax - xmin,
-                                                     ymax - ymin, fill=False,
-                                                     edgecolor=colors[cls_id],
-                                                     linewidth=3.5)
-                                plt.gca().add_patch(rect)
                                 class_name = str(cls_id)
                                 if classes and len(classes) > cls_id:
                                     class_name = classes[cls_id]
-                                plt.gca().text(xmin, ymin - 2,
-                                               '{:s} {:.3f}'.format(class_name, score),
-                                               bbox=dict(facecolor=colors[cls_id], alpha=0.5),
-                                               fontsize=12, color='white')
+                                cv2.rectangle(img, (xmin, ymin), (xmax, ymax), colors[cls_id], 4)
+                                cv2.putText(img, "{}: {}".format(class_name, score), (xmin, ymin - 8),
+                                            cv2.FONT_HERSHEY_SIMPLEX, 1, colors[cls_id], 2, cv2.LINE_AA)
 
-                    plt.box(False)
 
-                    for spine in plt.gca().spines.values():
-                        spine.set_visible(False)
-
-                    plt.savefig(out+"/{}.jpg".format(idx), bbox_inches='tight', pad_inches=0.0)
-
-                    plt.pause(0.000000001)
+                    im_rgb=cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
+                    cv2.imwrite(out+"/{}.jpg".format(idx), im_rgb)
         print("time elapsed total: %f"%self.sum)
         print("average time: %f"% (self.sum/len(im_list)))
 
